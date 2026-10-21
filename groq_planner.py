@@ -4,6 +4,7 @@ import urllib.error
 from pathlib import Path
 
 from task_protocol import validate_task, execute_simulation
+from task_executor import execute_live
 
 API_URL = "https://api.groq.com/openai/v1/chat/completions"
 MODEL = "qwen/qwen3.8-27b"
@@ -107,7 +108,7 @@ def main():
             print(json.dumps(plan, indent=2, ensure_ascii=False))
 
             task = validate_task(plan)
-            execute_simulation(task)
+            execute_live(task)
 
         except KeyboardInterrupt:
             break
