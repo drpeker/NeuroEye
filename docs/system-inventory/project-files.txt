@@ -1,0 +1,13 @@
+capture.jpg 87437 bytes
+models/coco_labels.txt 930 bytes
+models/labels.txt 21686 bytes
+models/ssd_mobilenet_v2.tflite 6175328 bytes
+models/mobilenet_v1.tflite 4276352 bytes
+neuroeye.py 3387 bytes
+neuroeye_live_STABLE.py 5434 bytes
+detect.py 2389 bytes
+detections.json 1338 bytes
+classify.py 993 bytes
+detected.jpg 43909 bytes
+neuroeye_live.py 5434 bytes
+neuroeye_live_BACKUP.py 5415 bytes

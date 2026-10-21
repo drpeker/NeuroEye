@@ -1,0 +1,1 @@
+pip 26.2.1 from /home/drpeker/neuroeye/.venv/lib/python3.13/site-packages/pip (python 3.13)
