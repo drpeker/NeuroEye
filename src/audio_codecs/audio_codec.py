@@ -277,7 +277,18 @@ class AudioCodec:
         - TTS 在场时音乐按 _MUSIC_DUCK_GAIN 闪避，并在 TTS
           帧间隙保持若干块（避免闪避增益抖动）
         """
-        tts = self._tts_fifo.pull(n)
+        # TTS jitter buffer: oynatmaya 200 ms ses birikince başla.
+        # Tampon tamamen boşalırsa yeniden doldur.
+        if not getattr(self, "_tts_prebuffer_ready", False):
+            if self._tts_fifo.size >= int(AudioConfig.OUTPUT_SAMPLE_RATE * 0.2):
+                self._tts_prebuffer_ready = True
+
+        if getattr(self, "_tts_prebuffer_ready", False):
+            tts = self._tts_fifo.pull(n)
+            if self._tts_fifo.size == 0:
+                self._tts_prebuffer_ready = False
+        else:
+            tts = None
         music = self._music_fifo.pull(n)
 
         if tts is None and music is None:
