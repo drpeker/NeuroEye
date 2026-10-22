@@ -85,7 +85,7 @@ class AudioDeviceManager:
 
         # 3. 输入固定单声道（协议要求 + 避免阵列驱动延迟），输出保持设备声道数
         input_channels = 1
-        output_channels = output_info["channels"]
+        output_channels = min(2, output_info["channels"])
 
         device_input_sample_rate = input_info["sample_rate"]
         device_output_sample_rate = output_info["sample_rate"]

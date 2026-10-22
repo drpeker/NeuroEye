@@ -58,6 +58,16 @@ class UIPlugin(Plugin):
         if self._session:
             self._session.subscribe(bus)
 
+            if self.mode == "cli":
+                async def start_auto_conversation():
+                    await self._session.auto_toggle()
+                    await self._session.auto_session_toggle()
+
+                self._cmd.spawn(
+                    start_auto_conversation(),
+                    name="ui:cli:auto_conversation",
+                )
+
         if self.viewport:
             self._cmd.spawn(
                 self.viewport.start(mode=self.mode),
