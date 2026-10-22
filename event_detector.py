@@ -8,7 +8,7 @@ TARGET = "person"
 APPEAR_FRAMES = 3
 DISAPPEAR_FRAMES = 3
 MIN_CONFIDENCE = 0.50
-INTERVAL = 0.5
+INTERVAL = 0.2
 
 
 class EventDetector:
