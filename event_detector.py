@@ -1,5 +1,6 @@
+import json
 import time
-from datetime import datetime
+from datetime import datetime, timezone
 
 from neurosupervisor import read_detections, analyze
 
@@ -29,32 +30,42 @@ class EventDetector:
 
             if not self.present and self.seen_count >= APPEAR_FRAMES:
                 self.present = True
-                return "OBJECT_APPEARED"
+                event_type = "OBJECT_APPEARED"
+            else:
+                return None
         else:
             self.missing_count += 1
             self.seen_count = 0
 
             if self.present and self.missing_count >= DISAPPEAR_FRAMES:
                 self.present = False
-                return "OBJECT_DISAPPEARED"
+                event_type = "OBJECT_DISAPPEARED"
+            else:
+                return None
 
-        return None
+        return {
+            "type": event_type,
+            "source": "neuroeye",
+            "target": TARGET,
+            "timestamp": datetime.now(timezone.utc).isoformat(
+                timespec="seconds"
+            ),
+        }
 
 
 def main():
     detector = EventDetector()
 
-    print("NeuroEye Event Detector v0.2")
-    print("Target:", TARGET)
-    print("Appear confirmation:", APPEAR_FRAMES)
-    print("Disappear confirmation:", DISAPPEAR_FRAMES)
-    print("Minimum confidence:", MIN_CONFIDENCE)
+    print("NeuroEye Event Detector v0.3", flush=True)
+    print("Target:", TARGET, flush=True)
+    print("Mode: Structured JSON events", flush=True)
     print("Press Ctrl+C to stop", flush=True)
 
     try:
         while True:
             try:
                 raw = read_detections()
+
                 if raw is None:
                     raise RuntimeError("Detection data unavailable")
 
@@ -62,11 +73,8 @@ def main():
                 event = detector.update(detections)
 
                 if event:
-                    timestamp = datetime.now().isoformat(
-                        timespec="seconds"
-                    )
                     print(
-                        f"[{timestamp}] {event}: {TARGET}",
+                        json.dumps(event, ensure_ascii=False),
                         flush=True
                     )
 
